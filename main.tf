@@ -1,28 +1,14 @@
 
-module "vpc" {
- source = "terraform-aws-modules/vpc/aws"
- 
-
- name = "vpc-fasfood-rds"
- cidr = "10.0.0.0/16"
-
- azs           = ["us-east-1a", "us-east-1b"]
- private_subnets = ["10.0.1.0/24", "10.0.2.0/24"]
- public_subnets = ["10.0.3.0/24", "10.0.4.0/24"]
-
- enable_nat_gateway = true
-}
-
 resource "aws_db_subnet_group" "fastfood_subnet_group" {
   name      = "aws_rds_subnets_groups"
-  subnet_ids = module.vpc.private_subnets # your private subnet IDs
+  subnet_ids = ["subnet-086f0df260c2643e6", "subnet-016dafa26cbceb106"]
 }
 
 
 resource "aws_security_group" "this" {
   name        = "security_group_postgres_fastfood-produto"
   description = "Allow inbound traffic"
-  vpc_id = module.vpc.vpc_id
+  vpc_id = vpc-06d37389267371f99
 
 
 
@@ -47,11 +33,9 @@ resource "aws_db_instance" "default" {
   engine               = "postgres"
   engine_version       = "15.4"
   instance_class       = "db.t3.micro"
-  username             = "postgres"
-  password             = "fastfoodsquad24"
+  username             = var.db_username
+  password             = var.db_password
   skip_final_snapshot  = true
   db_subnet_group_name = aws_db_subnet_group.fastfood_subnet_group.name
   vpc_security_group_ids = [aws_security_group.this.id]
-
-  
 }
