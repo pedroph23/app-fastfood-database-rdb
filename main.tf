@@ -8,7 +8,7 @@ resource "aws_db_subnet_group" "fastfood_subnet_group" {
 resource "aws_security_group" "this" {
   name        = "security_group_postgres_fastfood-produto"
   description = "Allow inbound traffic"
-  vpc_id = vpc-06d37389267371f99
+  vpc_id = "vpc-06d37389267371f99"
 
 
 
